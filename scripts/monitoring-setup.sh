@@ -1,3 +1,11 @@
+#!/usr/bin/env bash
+#
+# This script sets up the Prometheus / Grafana operator
+# Without option it searches for cnpg-playground kind clusters in your environmen
+# and deploy / setup the operators. 
+# To setup monitoring for a specific region, use the region as option.
+#
+#
 # Copyright The CloudNativePG Contributors
 #
 # Setup a Prometheus/Grafana stack on infrastructure nodes
@@ -30,18 +38,19 @@ else
     REGIONS=($(kind get clusters | grep "^${K8S_BASE_NAME}-" | sed "s/^${K8S_BASE_NAME}-//" || true))
 fi
 
+
 git_repo_root=$(git rev-parse --show-toplevel)
 kube_config_path=${git_repo_root}/k8s/kube-config.yaml
 export KUBECONFIG=${kube_config_path}
 
 for region in "${REGIONS[@]}"; do
     echo "-------------------------------------------------------------"
-    echo "🚀 Provisioning monitoring resources for region: ${region}"
+    echo " 🔥 Provisioning Prometheus resources for region: ${region}"
     echo "-------------------------------------------------------------"
 
     K8S_CLUSTER_NAME="${K8S_BASE_NAME}-${region}"
 
-# Deploy the Prometheus operator in both Kubernetes clusters
+# Deploy the Prometheus operator in the playground Kubernetes clusters
     kubectl --context kind-${K8S_CLUSTER_NAME} create ns prometheus-operator || true
     kubectl kustomize ${git_repo_root}/k8s/monitoring/prometheus-operator | \
     kubectl --context kind-${K8S_CLUSTER_NAME} apply --force-conflicts --server-side -f -
@@ -53,6 +62,10 @@ for region in "${REGIONS[@]}"; do
       patch deployment prometheus-operator \
       --type='merge' \
       --patch='{"spec":{"template":{"spec":{"tolerations":[{"key":"node-role.kubernetes.io/infra","operator":"Exists","effect":"NoSchedule"}],"nodeSelector":{"node-role.kubernetes.io/infra":""}}}}}'
+
+    echo "-------------------------------------------------------------"
+    echo " 📈 Provisioning Grafana resources for region: ${region}"
+    echo "-------------------------------------------------------------"
 
 # Deploying Grafana operator
     kubectl --context kind-${K8S_CLUSTER_NAME} apply --force-conflicts --server-side \
@@ -73,3 +86,14 @@ then
   kubectl rollout status deployment -n cnpg-system cnpg-controller-manager
 fi
 done
+
+    echo "-----------------------------------------------------------------------------------------------------------------"
+    echo " ⏩ To forward the grafana service for region: ${region} to your local host"
+    echo " wait for the grafana-service to be created and then forward the service"
+    echo ""
+    echo " kubectl port-forward service/grafana-service 3000:3000 -n grafana --context kind-k8s-at"
+    echo ""
+    echo " you can then connect to the grafana gui using "
+    echo " http://localhost:3000"
+    echo " The default password for user admin is admin, you will be requested to change the password on the first login"
+    echo "-----------------------------------------------------------------------------------------------------------------"
