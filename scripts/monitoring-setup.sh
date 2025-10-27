@@ -45,7 +45,7 @@ export KUBECONFIG=${kube_config_path}
 
 for region in "${REGIONS[@]}"; do
     echo "-------------------------------------------------------------"
-    echo " 🔥 Provisioning Prometheus resources for region: ${region}"
+    echo " 🔥 Provisioning monitoring resources for region: ${region}"
     echo "-------------------------------------------------------------"
 
     K8S_CLUSTER_NAME="${K8S_BASE_NAME}-${region}"
@@ -64,7 +64,7 @@ for region in "${REGIONS[@]}"; do
       --patch='{"spec":{"template":{"spec":{"tolerations":[{"key":"node-role.kubernetes.io/infra","operator":"Exists","effect":"NoSchedule"}],"nodeSelector":{"node-role.kubernetes.io/infra":""}}}}}'
 
     echo "-------------------------------------------------------------"
-    echo " 📈 Provisioning Grafana resources for region: ${region}"
+    echo " 📈 Provisioning monitoring resources for region: ${region}"
     echo "-------------------------------------------------------------"
 
 # Deploying Grafana operator
@@ -86,14 +86,3 @@ then
   kubectl rollout status deployment -n cnpg-system cnpg-controller-manager
 fi
 done
-
-    echo "-----------------------------------------------------------------------------------------------------------------"
-    echo " ⏩ To forward the grafana service for region: ${region} to your local host"
-    echo " wait for the grafana-service to be created and then forward the service"
-    echo ""
-    echo " kubectl port-forward service/grafana-service 3000:3000 -n grafana --context kind-k8s-at"
-    echo ""
-    echo " you can then connect to the grafana gui using "
-    echo " http://localhost:3000"
-    echo " The default password for user admin is admin, you will be requested to change the password on the first login"
-    echo "-----------------------------------------------------------------------------------------------------------------"
