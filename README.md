@@ -197,6 +197,27 @@ both the `kind-k8s-eu` and `kind-k8s-us` clusters.
 Ensure that you have the latest version of the `cnpg` plugin installed on your
 local machine.
 
+## Monitoring
+
+If you want your clusters to be monitored by the [CloudNativePG Grafana Dashboard](https://github.com/cloudnative-pg/grafana-dashboards)
+you can add the Prometheus & Grafana operators by running the [monitoring-setup.sh ](./scripts/monitoring-setup.sh).
+
+```bash
+# Monitoring setup for the default two-region environment (eu, us)
+./scripts/monitoring-setup.sh
+```
+
+You can easily customize this by providing your own list of region names as
+arguments.
+
+```bash
+# Monitoring setup for custom environment with 'it' and 'de' regions, simulating Italy and Germany
+./scripts/monitoring-setup.sh it de
+
+# Monitoring setup for a single-region environment
+./scripts/monitoring-setup.sh local
+```
+
 ## Nix Flakes
 
 Do you use Nix flakes? If you do, this package have a configured
