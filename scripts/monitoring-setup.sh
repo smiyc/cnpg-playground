@@ -87,13 +87,13 @@ then
 fi
 
     echo "-----------------------------------------------------------------------------------------------------------------"
-    echo " ⏩ To forward the grafana service for region: ${region} to your local host"
-    echo " wait for the grafana-service to be created and then forward the service"
+    echo " ⏩ To forward the Grafana service for region: ${region} to your localhost"
+    echo " Wait for the Grafana service to be created and then forward the service"
     echo ""
     echo " kubectl port-forward service/grafana-service 3000:3000 -n grafana --context kind-k8s-at"
     echo ""
-    echo " you can then connect to the grafana gui using "    
+    echo " You can then connect to the Grafana GUI using"
     echo " http://localhost:3000"
-    echo " The default password for user admin is admin, you will be requested to change the password on the first login"
-    echo "-----------------------------------------------------------------------------------------------------------------"
+    echo " The default password for the user admin is "admin". You will be prompted to change the password on the first login."
+    echo "-----------------------------------------------------------------------------------------------------------------"    
 done
