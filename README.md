@@ -200,7 +200,7 @@ local machine.
 ## Monitoring
 
 If you want your clusters to be monitored by the [CloudNativePG Grafana Dashboard](https://github.com/cloudnative-pg/grafana-dashboards)
-you can add the Prometheus & Grafana operators by running the [monitoring-setup.sh ](./scripts/monitoring-setup.sh).
+you can add the Prometheus & Grafana operators by running the [monitoring-setup.sh](./scripts/monitoring-setup.sh).
 
 ### Setup
 ```bash
