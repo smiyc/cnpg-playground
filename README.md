@@ -204,7 +204,7 @@ you can add the Prometheus & Grafana operators by running the [monitoring-setup.
 
 ### Setup
 ```bash
-# Monitoring setup for the default two-region environment (eu, us)
+# Monitoring setup for learning environment you setup earlier, by default two-regions (eu, us)
 ./scripts/monitoring-setup.sh
 ```
 
@@ -220,7 +220,7 @@ arguments.
 ```
 
 ### Accessing the dashboard
-After you run the [monitoring-setup.sh ](./scripts/monitoring-setup.sh) you can access the dashboard by forwarding the Grafana port
+After you run the [monitoring-setup.sh](./scripts/monitoring-setup.sh) you can access the dashboard by forwarding the Grafana port
 ```bash
 # Forwarding the Grafana port for the default two-region environment (eu, us)
 kubectl port-forward service/grafana-service 3000:3000 -n grafana --context kind-k8s-eu
