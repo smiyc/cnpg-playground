@@ -31,9 +31,9 @@ source "$(dirname "$0")/common.sh"
 REGIONS=()
 if [ $# -gt 0 ]; then
     REGIONS=("$@")
-    echo "🎯 Targeting specified regions for teardown: ${REGIONS[*]}"
+    echo "🎯 Targeting specified regions for monitoring setup: ${REGIONS[*]}"
 else
-    echo "🔎 Auto-detecting all active playground regions for teardown..."
+    echo "🔎 Auto-detecting all active playground regions for monitoring setup..."
     # The '|| true' prevents the script from exiting if grep finds no matches.
     REGIONS=($(kind get clusters | grep "^${K8S_BASE_NAME}-" | sed "s/^${K8S_BASE_NAME}-//" || true))
 fi
