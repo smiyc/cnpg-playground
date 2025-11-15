@@ -68,7 +68,7 @@ for region in "${REGIONS[@]}"; do
     echo "-------------------------------------------------------------"
 
 # Deploying Grafana operator
-    kubectl --context kind-${K8S_CLUSTER_NAME} apply --force-conflicts --server-side --validate=false \
+    kubectl --context kind-${K8S_CLUSTER_NAME} apply --force-conflicts --server-side \
       -f https://github.com/grafana/grafana-operator/releases/latest/download/kustomize-cluster_scoped.yaml
     kubectl --context kind-${K8S_CLUSTER_NAME} -n grafana \
       patch deployment grafana-operator-controller-manager \
