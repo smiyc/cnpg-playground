@@ -35,7 +35,7 @@ echo "🔥 Tearing down regions: ${REGIONS[*]}"
 for region in "${REGIONS[@]}"; do
     K8S_CLUSTER_NAME=$(get_cluster_name "${region}")
     CONTEXT_NAME=$(get_cluster_context "${region}")
-    MINIO_CONTAINER_NAME="${MINIO_BASE_NAME}-${region}"
+    RUSTFS_CONTAINER_NAME="${RUSTFS_BASE_NAME}-${region}"
 
     echo "--------------------------------------------------"
     echo "🔥 Tearing down region: ${region}"
@@ -49,18 +49,20 @@ for region in "${REGIONS[@]}"; do
         echo "🔷 Kind cluster '${K8S_CLUSTER_NAME}' not found, skipping."
     fi
 
-    # Stop and remove MinIO container
-    if [[ $($CONTAINER_PROVIDER ps -a --format '{{.Names}}') == *"${MINIO_CONTAINER_NAME}"* ]]; then
-        echo "🗑️  Removing MinIO container '${MINIO_CONTAINER_NAME}'..."
-        $CONTAINER_PROVIDER rm -f "${MINIO_CONTAINER_NAME}" > /dev/null
+    # Stop and remove RustFS container
+    if [[ $($CONTAINER_PROVIDER ps -a --format '{{.Names}}') == *"${RUSTFS_CONTAINER_NAME}"* ]]; then
+        echo "🗑️  Removing RustFS container '${RUSTFS_CONTAINER_NAME}'..."
+        $CONTAINER_PROVIDER rm -f "${RUSTFS_CONTAINER_NAME}" > /dev/null
     else
-        echo "🔷 MinIO container '${MINIO_CONTAINER_NAME}' not found, skipping."
+        echo "🔷 RustFS container '${RUSTFS_CONTAINER_NAME}' not found, skipping."
     fi
 
-    # Remove MinIO data directory
-    if [ -d "${GIT_REPO_ROOT}/${MINIO_CONTAINER_NAME}" ]; then
-        echo "🗑️  Removing MinIO data directory..."
-        rm -rf "${GIT_REPO_ROOT}/${MINIO_CONTAINER_NAME}"
+    # Remove RustFS data volume
+    if $CONTAINER_PROVIDER volume inspect "${RUSTFS_CONTAINER_NAME}" > /dev/null 2>&1; then
+        echo "🗑️  Removing RustFS data volume '${RUSTFS_CONTAINER_NAME}'..."
+        $CONTAINER_PROVIDER volume rm "${RUSTFS_CONTAINER_NAME}" > /dev/null
+    else
+        echo "🔷 RustFS data volume '${RUSTFS_CONTAINER_NAME}' not found, skipping."
     fi
 
     # Clean up kubeconfig entry for the deleted cluster
